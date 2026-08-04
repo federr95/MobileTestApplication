@@ -15,8 +15,7 @@ import android.widget.TextView;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Objects;
 
 import adpters.TaskAdapter;
 import model.Task;
@@ -32,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private TaskAdapter taskAdapter;
     private ArrayList<Task> taskArrayList = new ArrayList<>();
 
-    private List<String> toDoActivitiesList = new LinkedList<>();
     private Integer numberOfActivityToBeDone = 0;
 
     @Override
@@ -48,12 +46,29 @@ public class MainActivity extends AppCompatActivity {
 
         initializeListeners();
 
-
+        restoreState(savedInstanceState);
 
 
 //        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 //        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+    }
+
+    private void restoreState(Bundle savedInstanceState) {
+        if (savedInstanceState != null && savedInstanceState.containsKey("counter")) {
+            String activityNumberAsString = "Numero delle attività: " + savedInstanceState.getInt("counter");
+            counterView.setText(activityNumberAsString);
+            numberOfActivityToBeDone = savedInstanceState.getInt("counter");
+        }
+        if (savedInstanceState != null && savedInstanceState.containsKey("lastActivity")) {
+            String lastActivityAsString = "Ultima attività inserita: " + savedInstanceState.getString("lastActivity");
+            lastActivity.setText(lastActivityAsString);
+            Task lastActivity = new Task(savedInstanceState.getString("lastActivity"));
+            taskArrayList.add(lastActivity);
+        }
+        if (savedInstanceState != null && savedInstanceState.containsKey("tasksList"))
+            taskArrayList.addAll(Objects.requireNonNull(savedInstanceState.getParcelableArrayList("tasksList")));
 
     }
 
@@ -84,12 +99,10 @@ public class MainActivity extends AppCompatActivity {
             editText.setError("Inserire un'attivita prima di premere il bottone Add!");
             return;
         }
-        Task task = new Task();
-        task.setTitle(activityToBeDone);
+        Task task = new Task(activityToBeDone);
         taskArrayList.add(task);
         taskAdapter.notifyItemInserted(taskArrayList.size() - 1);
-        toDoActivitiesList.add(activityToBeDone);
-        String lastActivityAsString = "Ultima attività inserita: " + toDoActivitiesList.get(numberOfActivityToBeDone);
+        String lastActivityAsString = "Ultima attività inserita: " + taskArrayList.get(numberOfActivityToBeDone).getTitle();
         lastActivity.setText(lastActivityAsString);
         numberOfActivityToBeDone++;
         String activityNumberAsString = "Numero delle attività: " + numberOfActivityToBeDone;
@@ -154,6 +167,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d("onSaveInstanceState", "chiamata alla funzione onSaveInstanceState");
+        if (numberOfActivityToBeDone != 0) {
+            outState.putInt("counter", numberOfActivityToBeDone);
+            outState.putSerializable("tasksList", taskArrayList);
+            if (numberOfActivityToBeDone > 1) {
+                outState.putString("lastActivity", taskArrayList.get(numberOfActivityToBeDone - 1).getTitle());
+            } else outState.putString("lastActivity", taskArrayList.get(numberOfActivityToBeDone).getTitle());
+        }
     }
 
 //    @Override
