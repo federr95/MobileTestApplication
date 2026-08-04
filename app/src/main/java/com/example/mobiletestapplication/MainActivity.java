@@ -2,6 +2,8 @@ package com.example.mobiletestapplication;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -12,8 +14,12 @@ import android.widget.TextView;
 
 import androidx.navigation.ui.AppBarConfiguration;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import adpters.TaskAdapter;
+import model.Task;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonAdd;
     private TextView lastActivity;
     private EditText editText;
+    private RecyclerView recyclerView;
+    private TaskAdapter taskAdapter;
+    private ArrayList<Task> taskArrayList = new ArrayList<>();
 
     private List<String> toDoActivitiesList = new LinkedList<>();
     private Integer numberOfActivityToBeDone = 0;
@@ -60,8 +69,11 @@ public class MainActivity extends AppCompatActivity {
         buttonAdd  = findViewById(R.id.buttonAdd);
         lastActivity = findViewById(R.id.lastActivityToBeDoneView);
         editText = findViewById(R.id.editText);
-
-
+        recyclerView = findViewById(R.id.recyclerTasks);
+        taskAdapter = new TaskAdapter(taskArrayList);
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(this));
+        recyclerView.setAdapter(taskAdapter);
     }
 
 
@@ -72,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
             editText.setError("Inserire un'attivita prima di premere il bottone Add!");
             return;
         }
+        Task task = new Task();
+        task.setTitle(activityToBeDone);
+        taskArrayList.add(task);
+        taskAdapter.notifyItemInserted(taskArrayList.size() - 1);
         toDoActivitiesList.add(activityToBeDone);
         String lastActivityAsString = "Ultima attività inserita: " + toDoActivitiesList.get(numberOfActivityToBeDone);
         lastActivity.setText(lastActivityAsString);
