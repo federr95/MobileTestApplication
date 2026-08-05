@@ -1,6 +1,7 @@
 package com.example.mobiletestapplication;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,12 @@ import model.Task;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String SHARED_PREFERENCES_NAME = "taskflow_preferences";
+    private static final String TASK_NUMBER = "task_number";
+    private static final String LAST_TASK_NAME = "last_task_name";
+    private static final String LAST_TASK_DESCRIPTION = "last_task_description";
+    private static final String LAST_TASK_PRIORITY = "last_task_priority";
+
     private AppBarConfiguration appBarConfiguration;
 
     // vista e contatore in cima alla schermata
@@ -34,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
     // vista per l'ultima attivita
     private TextView lastActivity;
-    private EditText editText;
+    private EditText editTextNomeAttivita;
+    private EditText editTextDescrizioneAttivita;
+    private EditText editTextPrioritaAttivita;
 
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
@@ -55,7 +64,31 @@ public class MainActivity extends AppCompatActivity {
 
         initializeListeners();
 
+        loadPreferencies();
+
         restoreState(savedInstanceState);
+
+    }
+
+    private void loadPreferencies() {
+
+        SharedPreferences sharedPreferences = getSharedPreferences(
+                SHARED_PREFERENCES_NAME,
+                MODE_PRIVATE);
+
+        Task task = new Task(
+                sharedPreferences.getString(LAST_TASK_NAME, ""),
+                sharedPreferences.getString(LAST_TASK_DESCRIPTION, ""),
+                sharedPreferences.getInt(LAST_TASK_PRIORITY, 0));
+
+        taskArrayList.add(task);
+        taskAdapter = new TaskAdapter(taskArrayList);
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(this));
+
+        numberOfActivityToBeDone = sharedPreferences.getInt(TASK_NUMBER, 0);
+        String tmp = counterView.getText() + String.valueOf(numberOfActivityToBeDone);
+        counterView.setText(tmp);
 
     }
 
@@ -77,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
     private void initializeListeners() {
 
         buttonAdd.setOnClickListener(v -> addActivityToList());
-
     }
 
     private void initializeViews() {
@@ -86,7 +118,9 @@ public class MainActivity extends AppCompatActivity {
         counterView = findViewById(R.id.numberOfActivityToBeDoneView);
         buttonAdd  = findViewById(R.id.buttonAdd);
         lastActivity = findViewById(R.id.lastActivityToBeDoneView);
-        editText = findViewById(R.id.editText);
+        editTextNomeAttivita = findViewById(R.id.editTextNomeAttivita);
+        editTextDescrizioneAttivita = findViewById(R.id.editTextDescrizioneAttivita);
+        editTextPrioritaAttivita = findViewById(R.id.editTextPrioritaAttivita);
         recyclerView = findViewById(R.id.recyclerTasks);
 
         taskAdapter = new TaskAdapter(taskArrayList);
@@ -99,13 +133,27 @@ public class MainActivity extends AppCompatActivity {
     private void addActivityToList() {
 
         // check che il form sia pieno
-        String activityToBeDone = editText.getText().toString();
-        if (TextUtils.isEmpty(activityToBeDone)) {
-            editText.setError("Inserire un'attivita prima di premere il bottone Add!");
+        String nameActivityToBeDone = editTextNomeAttivita.getText().toString();
+        if (TextUtils.isEmpty(nameActivityToBeDone)) {
+            editTextNomeAttivita.setError("Inserire un'attivita prima di premere il bottone Add!");
             return;
         }
 
-        Task task = new Task(activityToBeDone);
+        String descriptionActivityToBeDone = editTextDescrizioneAttivita.getText().toString();
+        if (TextUtils.isEmpty(descriptionActivityToBeDone)) {
+            editTextDescrizioneAttivita.setError("Inserire una descrizione prima di premere il bottone Add!");
+            return;
+        }
+
+        String priorityActivityToBeDone = String.valueOf(editTextPrioritaAttivita.getText());
+        if (priorityActivityToBeDone.isEmpty() || priorityActivityToBeDone.toCharArray().length != 1 ||
+                !Character.isDigit(priorityActivityToBeDone.charAt(0))) {
+            editTextPrioritaAttivita.setError("Inserire una priorita da 0 a 9 prima di premere il bottone Add!");
+            return;
+        }
+
+
+        Task task = new Task(nameActivityToBeDone, descriptionActivityToBeDone, Integer.parseInt(priorityActivityToBeDone));
         taskArrayList.add(task);
         taskAdapter.notifyItemInserted(taskArrayList.size() - 1);
 
@@ -119,14 +167,21 @@ public class MainActivity extends AppCompatActivity {
         counterView.setText(activityNumberAsString);
 
         // rimozione testo dal form e chiusura della tastiera
-        editText.setText("");
-        editText.clearFocus();
+        editTextNomeAttivita.setText("");
+        editTextDescrizioneAttivita.setText("");
+        editTextPrioritaAttivita.setText("");
+
+        editTextNomeAttivita.clearFocus();
+        editTextDescrizioneAttivita.clearFocus();
+        editTextPrioritaAttivita.clearFocus();
 
         InputMethodManager imm =
                 (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (imm != null) {
-            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(editTextPrioritaAttivita.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(editTextDescrizioneAttivita.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(editTextNomeAttivita.getWindowToken(), 0);
         }
 
     }
@@ -157,6 +212,30 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
         Log.d("MobileTestApplication", "onStop");
+        
+        savePreferencies();
+    }
+
+    private void savePreferencies() {
+
+        SharedPreferences preferences = getSharedPreferences(
+                SHARED_PREFERENCES_NAME,
+                MODE_PRIVATE
+        );
+
+        SharedPreferences.Editor editor = preferences.edit();
+
+        if (numberOfActivityToBeDone == 1) {
+            editor.putString(LAST_TASK_NAME, taskArrayList.get(0).getTitle());
+            editor.putString(LAST_TASK_DESCRIPTION, taskArrayList.get(0).getDescription());
+            editor.putInt(LAST_TASK_PRIORITY, taskArrayList.get(0).getPriority());
+        } else {
+            editor.putString(LAST_TASK_NAME, taskArrayList.get(numberOfActivityToBeDone - 1).getTitle());
+            editor.putString(LAST_TASK_DESCRIPTION, taskArrayList.get(numberOfActivityToBeDone - 1).getDescription());
+            editor.putInt(LAST_TASK_PRIORITY, taskArrayList.get(numberOfActivityToBeDone - 1).getPriority());
+        }
+
+        editor.apply();
     }
 
     @Override

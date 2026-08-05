@@ -7,64 +7,99 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="75dp">
 
-    <TextView
-        android:id="@+id/numberOfActivityToBeDoneView"
-        android:layout_width="468dp"
-        android:layout_height="57dp"
-        android:layout_gravity="center|left"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="28dp"
-        android:text="@string/activities_number"
-        android:textSize="34sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="383dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="100dp"
-        android:hint="Inserisci il nome"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/buttonAdd"
-        android:layout_width="105dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="300dp"
-        android:layout_marginEnd="52dp"
-        android:clickable="true"
-        android:text="@string/add_new_activity"
-        app:fabSize="normal"
-        app:layout_anchorGravity="bottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+            <TextView
+                android:id="@+id/numberOfActivityToBeDoneView"
+                android:layout_width="363dp"
+                android:layout_height="54dp"
+                android:layout_gravity="center|left"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="72dp"
+                android:text="@string/activities_number"
+                android:textSize="34sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/lastActivityToBeDoneView"
-        android:layout_width="237dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="300dp"
-        android:text="@string/last_activity_inserted"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <EditText
+                android:id="@+id/editTextNomeAttivita"
+                android:layout_width="355dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="156dp"
+                android:hint="Inserisci il nome"
+                android:inputType="textPersonName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerTasks"
-        android:layout_width="342dp"
-        android:layout_height="121dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
-        tools:ignore="MissingConstraints" />
+            <EditText
+                android:id="@+id/editTextDescrizioneAttivita"
+                android:layout_width="355dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="208dp"
+                android:hint="Inserisci la descrizione"
+                android:inputType="textPersonName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <EditText
+                android:id="@+id/editTextPrioritaAttivita"
+                android:layout_width="355dp"
+                android:layout_height="41dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="260dp"
+                android:hint="Inserisci la priorita"
+                android:inputType="textPersonName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/buttonAdd"
+                android:layout_width="105dp"
+                android:layout_height="53dp"
+                android:layout_marginTop="484dp"
+                android:layout_marginEnd="32dp"
+                android:clickable="true"
+                android:text="@string/add_new_activity"
+                app:fabSize="normal"
+                app:layout_anchorGravity="bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/ic_input_add" />
+
+            <TextView
+                android:id="@+id/lastActivityToBeDoneView"
+                android:layout_width="237dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="496dp"
+                android:text="@string/last_activity_inserted"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerTasks"
+                android:layout_width="373dp"
+                android:layout_height="146dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="28dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextPrioritaAttivita"
+                tools:ignore="MissingConstraints" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

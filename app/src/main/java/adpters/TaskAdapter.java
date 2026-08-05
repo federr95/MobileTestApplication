@@ -1,12 +1,15 @@
 package adpters;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mobiletestapplication.R;
+import com.example.mobiletestapplication.TaskActivity;
 
 import java.util.ArrayList;
 
@@ -43,8 +46,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
             int position) {
 
         Task task = tasks.get(position);
+        Log.d("task object", task.toString());
 
         taskViewHolder.textTask.setText(task.getTitle());
+
+        taskViewHolder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), TaskActivity.class);
+            intent.putExtra("task", task);   // Task deve implementare Parcelable
+            v.getContext().startActivity(intent);
+        });
 
     }
 

@@ -13,4 +13,8 @@
     <string name="last_activity_inserted">Ultima attività inserita: </string>
     <string name="digit_new_activity">Digita una nuova attività</string>
     <string name="add_new_activity">Aggiungi attività</string>
+    <string name="task_name">Nome: %1$s</string>
+    <string name="task_description">Descrizione: %1$s</string>
+    <string name="task_completed">Completato: %1$b</string>
+    <string name="task_priority">Priorita: %1$d</string>
 </resources>
