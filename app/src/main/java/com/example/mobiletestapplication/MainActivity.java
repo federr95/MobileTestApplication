@@ -1,5 +1,6 @@
 package com.example.mobiletestapplication;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,15 +25,21 @@ import model.Task;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
+
+    // vista e contatore in cima alla schermata
     private TextView counterView;
+    private Integer numberOfActivityToBeDone = 0;
+
     private Button buttonAdd;
+
+    // vista per l'ultima attivita
     private TextView lastActivity;
     private EditText editText;
+
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
     private ArrayList<Task> taskArrayList = new ArrayList<>();
 
-    private Integer numberOfActivityToBeDone = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("MobileTestApplication", "onCreate");
 
+        // qua si sta dicendo a quali files del layout bisogna collegare l'activity
         setContentView(R.layout.activity_main);
         setContentView(R.layout.content_main);
 
@@ -47,11 +56,6 @@ public class MainActivity extends AppCompatActivity {
         initializeListeners();
 
         restoreState(savedInstanceState);
-
-
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-//        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
     }
 
@@ -64,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null && savedInstanceState.containsKey("lastActivity")) {
             String lastActivityAsString = "Ultima attività inserita: " + savedInstanceState.getString("lastActivity");
             lastActivity.setText(lastActivityAsString);
-            Task lastActivity = new Task(savedInstanceState.getString("lastActivity"));
-            taskArrayList.add(lastActivity);
         }
         if (savedInstanceState != null && savedInstanceState.containsKey("tasksList"))
             taskArrayList.addAll(Objects.requireNonNull(savedInstanceState.getParcelableArrayList("tasksList")));
@@ -80,11 +82,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeViews() {
 
+        // inizializzazione delle view (textView, buttons)
         counterView = findViewById(R.id.numberOfActivityToBeDoneView);
         buttonAdd  = findViewById(R.id.buttonAdd);
         lastActivity = findViewById(R.id.lastActivityToBeDoneView);
         editText = findViewById(R.id.editText);
         recyclerView = findViewById(R.id.recyclerTasks);
+
         taskAdapter = new TaskAdapter(taskArrayList);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(this));
@@ -94,20 +98,37 @@ public class MainActivity extends AppCompatActivity {
 
     private void addActivityToList() {
 
+        // check che il form sia pieno
         String activityToBeDone = editText.getText().toString();
         if (TextUtils.isEmpty(activityToBeDone)) {
             editText.setError("Inserire un'attivita prima di premere il bottone Add!");
             return;
         }
+
         Task task = new Task(activityToBeDone);
         taskArrayList.add(task);
         taskAdapter.notifyItemInserted(taskArrayList.size() - 1);
+
+        // aggiunta del testo nella text view dell'ultima attività aggiunta
         String lastActivityAsString = "Ultima attività inserita: " + taskArrayList.get(numberOfActivityToBeDone).getTitle();
         lastActivity.setText(lastActivityAsString);
+
+        // aggiunta del testo nella text view del numero attività
         numberOfActivityToBeDone++;
         String activityNumberAsString = "Numero delle attività: " + numberOfActivityToBeDone;
         counterView.setText(activityNumberAsString);
+
+        // rimozione testo dal form e chiusura della tastiera
         editText.setText("");
+        editText.clearFocus();
+
+        InputMethodManager imm =
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        }
+
     }
 
     @Override
@@ -178,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
             outState.putSerializable("tasksList", taskArrayList);
             if (numberOfActivityToBeDone > 1) {
                 outState.putString("lastActivity", taskArrayList.get(numberOfActivityToBeDone - 1).getTitle());
-            } else outState.putString("lastActivity", taskArrayList.get(numberOfActivityToBeDone).getTitle());
+            } else outState.putString("lastActivity", taskArrayList.get(0).getTitle());
         }
     }
 
