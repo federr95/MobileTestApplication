@@ -1,6 +1,7 @@
 package com.example.mobiletestapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,9 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private Integer numberOfActivityToBeDone = 0;
 
     private Button buttonAdd;
+    private Button buttonSettings;
 
     // vista per l'ultima attivita
-    private TextView lastActivity;
+    private TextView lastActivityView;
     private EditText editTextNomeAttivita;
     private EditText editTextDescrizioneAttivita;
     private EditText editTextPrioritaAttivita;
@@ -64,32 +66,45 @@ public class MainActivity extends AppCompatActivity {
 
         initializeListeners();
 
-        loadPreferencies();
+        loadPreferencies(savedInstanceState);
 
         restoreState(savedInstanceState);
 
     }
 
-    private void loadPreferencies() {
+    private void loadPreferencies(Bundle saveInstanceState) {
 
         SharedPreferences sharedPreferences = getSharedPreferences(
                 SHARED_PREFERENCES_NAME,
                 MODE_PRIVATE);
 
-        Task task = new Task(
-                sharedPreferences.getString(LAST_TASK_NAME, ""),
-                sharedPreferences.getString(LAST_TASK_DESCRIPTION, ""),
-                sharedPreferences.getInt(LAST_TASK_PRIORITY, 0));
+        // check if already exist a task inside bundle if exist it won't upload the data
+        if (saveInstanceState == null || (!saveInstanceState.containsKey("counter") ||
+                (saveInstanceState.containsKey("counter") && saveInstanceState.getInt("counter") == 0))) {
 
-        taskArrayList.add(task);
-        taskAdapter = new TaskAdapter(taskArrayList);
-        recyclerView.setLayoutManager(
-                new LinearLayoutManager(this));
+            // check if already exist a task inside sharedPreferences
+            String taskInsidePreferences = sharedPreferences.getString(LAST_TASK_NAME, "");
 
-        numberOfActivityToBeDone = sharedPreferences.getInt(TASK_NUMBER, 0);
-        String tmp = counterView.getText() + String.valueOf(numberOfActivityToBeDone);
-        counterView.setText(tmp);
+            if (taskInsidePreferences != null && !taskInsidePreferences.isEmpty()) {
 
+                Task task = new Task(
+                        sharedPreferences.getString(LAST_TASK_NAME, ""),
+                        sharedPreferences.getString(LAST_TASK_DESCRIPTION, ""),
+                        sharedPreferences.getInt(LAST_TASK_PRIORITY, 0));
+
+                taskArrayList.add(task);
+                taskAdapter = new TaskAdapter(taskArrayList);
+                recyclerView.setLayoutManager(
+                        new LinearLayoutManager(this));
+
+                numberOfActivityToBeDone = sharedPreferences.getInt(TASK_NUMBER, 0);
+                String tmp = counterView.getText() + " " + numberOfActivityToBeDone;
+                counterView.setText(tmp);
+
+                String tmpLastActivity = lastActivityView.getText() + " " + task.getTitle();
+                lastActivityView.setText(tmpLastActivity);
+            } else Log.i("loadPreferences", "there are no preferences to load!");
+        }
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -100,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (savedInstanceState != null && savedInstanceState.containsKey("lastActivity")) {
             String lastActivityAsString = "Ultima attività inserita: " + savedInstanceState.getString("lastActivity");
-            lastActivity.setText(lastActivityAsString);
+            lastActivityView.setText(lastActivityAsString);
         }
         if (savedInstanceState != null && savedInstanceState.containsKey("tasksList"))
             taskArrayList.addAll(Objects.requireNonNull(savedInstanceState.getParcelableArrayList("tasksList")));
@@ -110,6 +125,13 @@ public class MainActivity extends AppCompatActivity {
     private void initializeListeners() {
 
         buttonAdd.setOnClickListener(v -> addActivityToList());
+
+        // add botton to open settings
+        buttonSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), SettingsActivity.class);
+            v.getContext().startActivity(intent);
+        });
+
     }
 
     private void initializeViews() {
@@ -117,11 +139,12 @@ public class MainActivity extends AppCompatActivity {
         // inizializzazione delle view (textView, buttons)
         counterView = findViewById(R.id.numberOfActivityToBeDoneView);
         buttonAdd  = findViewById(R.id.buttonAdd);
-        lastActivity = findViewById(R.id.lastActivityToBeDoneView);
+        lastActivityView = findViewById(R.id.lastActivityToBeDoneView);
         editTextNomeAttivita = findViewById(R.id.editTextNomeAttivita);
         editTextDescrizioneAttivita = findViewById(R.id.editTextDescrizioneAttivita);
         editTextPrioritaAttivita = findViewById(R.id.editTextPrioritaAttivita);
         recyclerView = findViewById(R.id.recyclerTasks);
+        buttonSettings = findViewById(R.id.buttonSettings);
 
         taskAdapter = new TaskAdapter(taskArrayList);
         recyclerView.setLayoutManager(
@@ -159,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
         // aggiunta del testo nella text view dell'ultima attività aggiunta
         String lastActivityAsString = "Ultima attività inserita: " + taskArrayList.get(numberOfActivityToBeDone).getTitle();
-        lastActivity.setText(lastActivityAsString);
+        lastActivityView.setText(lastActivityAsString);
 
         // aggiunta del testo nella text view del numero attività
         numberOfActivityToBeDone++;
@@ -229,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
             editor.putString(LAST_TASK_NAME, taskArrayList.get(0).getTitle());
             editor.putString(LAST_TASK_DESCRIPTION, taskArrayList.get(0).getDescription());
             editor.putInt(LAST_TASK_PRIORITY, taskArrayList.get(0).getPriority());
+            editor.putInt(TASK_NUMBER, 1);
         } else {
             editor.putString(LAST_TASK_NAME, taskArrayList.get(numberOfActivityToBeDone - 1).getTitle());
             editor.putString(LAST_TASK_DESCRIPTION, taskArrayList.get(numberOfActivityToBeDone - 1).getDescription());

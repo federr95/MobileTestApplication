@@ -7,24 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="364dp"
-        android:theme="@style/Theme.MobileTestApplication.AppBarOverlay"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="-26dp">
-
-    </android.support.design.widget.AppBarLayout>
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="411dp"
         android:layout_height="80dp"
         android:layout_marginBottom="652dp"
         android:background="?attr/colorPrimary"
-        app:layout_anchor="@+id/appBarLayout2"
         app:layout_anchorGravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

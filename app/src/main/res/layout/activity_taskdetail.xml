@@ -7,64 +7,66 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/task_name"
-        android:layout_width="438dp"
-        android:layout_height="45dp"
-        android:layout_gravity="center|left"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="140dp"
-        android:text="@string/task_name"
-        android:textSize="34sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
-    <TextView
-        android:id="@+id/task_description"
-        android:layout_width="438dp"
-        android:layout_height="45dp"
-        android:layout_gravity="center|left"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="220dp"
-        android:text="@string/task_description"
-        android:textSize="34sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/task_name"
+                android:layout_width="379dp"
+                android:layout_height="53dp"
+                android:layout_gravity="center|left"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="140dp"
+                android:text="@string/task_name"
+                android:textSize="34sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/task_description"
+                android:layout_width="380dp"
+                android:layout_height="49dp"
+                android:layout_gravity="center|left"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="220dp"
+                android:text="@string/task_description"
+                android:textSize="34sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-    <TextView
-        android:id="@+id/task_completed"
-        android:layout_width="438dp"
-        android:layout_height="45dp"
-        android:layout_gravity="center|left"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="300dp"
-        android:text="@string/task_completed"
-        android:textSize="34sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/task_completed"
+                android:layout_width="380dp"
+                android:layout_height="49dp"
+                android:layout_gravity="center|left"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="300dp"
+                android:text="@string/task_completed"
+                android:textSize="34sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/task_priority"
-        android:layout_width="438dp"
-        android:layout_height="45dp"
-        android:layout_gravity="center|left"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="380dp"
-        android:text="@string/task_priority"
-        android:textSize="34sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/task_priority"
+                android:layout_width="377dp"
+                android:layout_height="49dp"
+                android:layout_gravity="center|left"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="380dp"
+                android:text="@string/task_priority"
+                android:textSize="34sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="411dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="652dp"
-        android:background="?attr/colorPrimary"
-        app:layout_anchorGravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:popupTheme="@style/Theme.MobileTestApplication.PopupOverlay" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
