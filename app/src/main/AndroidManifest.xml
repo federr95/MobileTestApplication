@@ -24,6 +24,8 @@
             android:name=".TaskActivity"/>
         <activity
             android:name=".SettingsActivity"/>
+        <activity
+            android:name=".TaskFormActivity"/>
     </application>
 
 </manifest>

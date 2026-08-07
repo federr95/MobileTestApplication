@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.navigation.ui.AppBarConfiguration;
@@ -32,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String LAST_TASK_DESCRIPTION = "last_task_description";
     private static final String LAST_TASK_PRIORITY = "last_task_priority";
 
+    private static final Integer TASK_FORM_ACTIVITY_ID = 100;
+    private static final String TASK_VALUE = "task_value";
+
+
     private AppBarConfiguration appBarConfiguration;
 
     // vista e contatore in cima alla schermata
@@ -43,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
     // vista per l'ultima attivita
     private TextView lastActivityView;
-    private EditText editTextNomeAttivita;
-    private EditText editTextDescrizioneAttivita;
-    private EditText editTextPrioritaAttivita;
+//    private EditText editTextNomeAttivita;
+//    private EditText editTextDescrizioneAttivita;
+//    private EditText editTextPrioritaAttivita;
 
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
@@ -124,7 +127,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeListeners() {
 
-        buttonAdd.setOnClickListener(v -> addActivityToList());
+//        buttonAdd.setOnClickListener(v -> addActivityToList());
+        buttonAdd.setOnClickListener(v -> {
+            Intent activityFormIntent = new Intent(v.getContext(), TaskFormActivity.class);
+            startActivityForResult(activityFormIntent, TASK_FORM_ACTIVITY_ID);
+        });
 
         // add botton to open settings
         buttonSettings.setOnClickListener(v -> {
@@ -136,13 +143,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeViews() {
 
+        // inizializzazione del launcher delle activity
+
+
+
         // inizializzazione delle view (textView, buttons)
         counterView = findViewById(R.id.numberOfActivityToBeDoneView);
         buttonAdd  = findViewById(R.id.buttonAdd);
         lastActivityView = findViewById(R.id.lastActivityToBeDoneView);
-        editTextNomeAttivita = findViewById(R.id.editTextNomeAttivita);
-        editTextDescrizioneAttivita = findViewById(R.id.editTextDescrizioneAttivita);
-        editTextPrioritaAttivita = findViewById(R.id.editTextPrioritaAttivita);
+//        editTextNomeAttivita = findViewById(R.id.editTextNomeAttivita);
+//        editTextDescrizioneAttivita = findViewById(R.id.editTextDescrizioneAttivita);
+//        editTextPrioritaAttivita = findViewById(R.id.editTextPrioritaAttivita);
         recyclerView = findViewById(R.id.recyclerTasks);
         buttonSettings = findViewById(R.id.buttonSettings);
 
@@ -155,57 +166,57 @@ public class MainActivity extends AppCompatActivity {
 
     private void addActivityToList() {
 
-        // check che il form sia pieno
-        String nameActivityToBeDone = editTextNomeAttivita.getText().toString();
-        if (TextUtils.isEmpty(nameActivityToBeDone)) {
-            editTextNomeAttivita.setError("Inserire un'attivita prima di premere il bottone Add!");
-            return;
-        }
+//        // check che il form sia pieno
+//        String nameActivityToBeDone = editTextNomeAttivita.getText().toString();
+//        if (TextUtils.isEmpty(nameActivityToBeDone)) {
+//            editTextNomeAttivita.setError("Inserire un'attivita prima di premere il bottone Add!");
+//            return;
+//        }
+//
+//        String descriptionActivityToBeDone = editTextDescrizioneAttivita.getText().toString();
+//        if (TextUtils.isEmpty(descriptionActivityToBeDone)) {
+//            editTextDescrizioneAttivita.setError("Inserire una descrizione prima di premere il bottone Add!");
+//            return;
+//        }
+//
+//        String priorityActivityToBeDone = String.valueOf(editTextPrioritaAttivita.getText());
+//        if (priorityActivityToBeDone.isEmpty() || priorityActivityToBeDone.toCharArray().length != 1 ||
+//                !Character.isDigit(priorityActivityToBeDone.charAt(0))) {
+//            editTextPrioritaAttivita.setError("Inserire una priorita da 0 a 9 prima di premere il bottone Add!");
+//            return;
+//        }
 
-        String descriptionActivityToBeDone = editTextDescrizioneAttivita.getText().toString();
-        if (TextUtils.isEmpty(descriptionActivityToBeDone)) {
-            editTextDescrizioneAttivita.setError("Inserire una descrizione prima di premere il bottone Add!");
-            return;
-        }
 
-        String priorityActivityToBeDone = String.valueOf(editTextPrioritaAttivita.getText());
-        if (priorityActivityToBeDone.isEmpty() || priorityActivityToBeDone.toCharArray().length != 1 ||
-                !Character.isDigit(priorityActivityToBeDone.charAt(0))) {
-            editTextPrioritaAttivita.setError("Inserire una priorita da 0 a 9 prima di premere il bottone Add!");
-            return;
-        }
-
-
-        Task task = new Task(nameActivityToBeDone, descriptionActivityToBeDone, Integer.parseInt(priorityActivityToBeDone));
-        taskArrayList.add(task);
-        taskAdapter.notifyItemInserted(taskArrayList.size() - 1);
-
-        // aggiunta del testo nella text view dell'ultima attività aggiunta
-        String lastActivityAsString = "Ultima attività inserita: " + taskArrayList.get(numberOfActivityToBeDone).getTitle();
-        lastActivityView.setText(lastActivityAsString);
-
-        // aggiunta del testo nella text view del numero attività
-        numberOfActivityToBeDone++;
-        String activityNumberAsString = "Numero delle attività: " + numberOfActivityToBeDone;
-        counterView.setText(activityNumberAsString);
+//        Task task = new Task(nameActivityToBeDone, descriptionActivityToBeDone, Integer.parseInt(priorityActivityToBeDone));
+//        taskArrayList.add(task);
+//        taskAdapter.notifyItemInserted(taskArrayList.size() - 1);
+//
+//        // aggiunta del testo nella text view dell'ultima attività aggiunta
+//        String lastActivityAsString = "Ultima attività inserita: " + taskArrayList.get(numberOfActivityToBeDone).getTitle();
+//        lastActivityView.setText(lastActivityAsString);
+//
+//        // aggiunta del testo nella text view del numero attività
+//        numberOfActivityToBeDone++;
+//        String activityNumberAsString = "Numero delle attività: " + numberOfActivityToBeDone;
+//        counterView.setText(activityNumberAsString);
 
         // rimozione testo dal form e chiusura della tastiera
-        editTextNomeAttivita.setText("");
-        editTextDescrizioneAttivita.setText("");
-        editTextPrioritaAttivita.setText("");
+//        editTextNomeAttivita.setText("");
+//        editTextDescrizioneAttivita.setText("");
+//        editTextPrioritaAttivita.setText("");
+//
+//        editTextNomeAttivita.clearFocus();
+//        editTextDescrizioneAttivita.clearFocus();
+//        editTextPrioritaAttivita.clearFocus();
 
-        editTextNomeAttivita.clearFocus();
-        editTextDescrizioneAttivita.clearFocus();
-        editTextPrioritaAttivita.clearFocus();
-
-        InputMethodManager imm =
-                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(editTextPrioritaAttivita.getWindowToken(), 0);
-            imm.hideSoftInputFromWindow(editTextDescrizioneAttivita.getWindowToken(), 0);
-            imm.hideSoftInputFromWindow(editTextNomeAttivita.getWindowToken(), 0);
-        }
+//        InputMethodManager imm =
+//                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//
+//        if (imm != null) {
+//            imm.hideSoftInputFromWindow(editTextPrioritaAttivita.getWindowToken(), 0);
+//            imm.hideSoftInputFromWindow(editTextDescrizioneAttivita.getWindowToken(), 0);
+//            imm.hideSoftInputFromWindow(editTextNomeAttivita.getWindowToken(), 0);
+//        }
 
     }
 
@@ -276,6 +287,32 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // qua c'è la call back di attesa su cui arrivano le risposte dalle diverse activity
+        if (requestCode == TASK_FORM_ACTIVITY_ID) {
+            if (resultCode == -1) {
+                Task task = Objects.requireNonNull(data.getExtras())
+                        .getParcelable(TASK_VALUE);
+                taskArrayList.add(task);
+                taskAdapter.notifyItemInserted(taskArrayList.size() - 1);
+
+                // aggiunta del testo nella text view dell'ultima attività aggiunta
+                String lastActivityAsString = "Ultima attività inserita: " + taskArrayList.get(numberOfActivityToBeDone).getTitle();
+                lastActivityView.setText(lastActivityAsString);
+
+                // aggiunta del testo nella text view del numero attività
+                numberOfActivityToBeDone++;
+                String activityNumberAsString = "Numero delle attività: " + numberOfActivityToBeDone;
+                counterView.setText(activityNumberAsString);
+            }
+        }
+
+
     }
 
     @Override

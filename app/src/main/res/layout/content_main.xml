@@ -39,45 +39,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/editTextNomeAttivita"
-                android:layout_width="355dp"
-                android:layout_height="39dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="156dp"
-                android:hint="Inserisci il nome"
-                android:inputType="textPersonName"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/editTextDescrizioneAttivita"
-                android:layout_width="355dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="208dp"
-                android:hint="Inserisci la descrizione"
-                android:inputType="textPersonName"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/editTextPrioritaAttivita"
-                android:layout_width="355dp"
-                android:layout_height="41dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="260dp"
-                android:hint="Inserisci la priorita"
-                android:inputType="textPersonName"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/buttonAdd"
                 android:layout_width="105dp"
                 android:layout_height="53dp"
-                android:layout_marginTop="484dp"
-                android:layout_marginEnd="32dp"
+                android:layout_marginTop="440dp"
+                android:layout_marginEnd="24dp"
                 android:clickable="true"
                 android:text="@string/add_new_activity"
                 app:fabSize="normal"
@@ -90,8 +58,8 @@
                 android:id="@+id/lastActivityToBeDoneView"
                 android:layout_width="237dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="496dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="440dp"
                 android:text="@string/last_activity_inserted"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -99,12 +67,12 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerTasks"
-                android:layout_width="373dp"
-                android:layout_height="146dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="28dp"
+                android:layout_width="367dp"
+                android:layout_height="228dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="168dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextPrioritaAttivita"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="MissingConstraints" />
 
         </android.support.constraint.ConstraintLayout>
